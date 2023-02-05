@@ -66,7 +66,7 @@ class DataLoader():
 
             data.close()
 
-    def get_next_batch(self) -> tuple[str, np.array]:
+    def get_next_batch(self) -> iter(str, np.array):
         # Use min() to ensure that we don't use an invalid index
         cur_range = range(self.curr_index, min(
             self.curr_index + self.batch_size, len(self.data)))

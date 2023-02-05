@@ -1,9 +1,17 @@
-from data_handler import get_training_data
+from data_handler import DataLoader
+import matplotlib.pyplot as plt
+
+# NUMBER_OF_IMAGES = 115_316
+# LARGEST_DIMENSIONS = (342, 1_934)
 
 
 def main() -> None:
-    labels, images = get_training_data()
-    print(len(labels), len(images))
+    batch_size = 32
+    testing = DataLoader(batch_size)
+    for label, array in testing.get_next_batch():
+        print(label)
+        plt.imshow(array)
+        plt.show()
 
 
 if __name__ == "__main__":

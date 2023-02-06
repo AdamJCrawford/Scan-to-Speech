@@ -2,8 +2,9 @@ import numpy as np
 
 
 def distortion_free_resize(image: np.array) -> np.array:
-    h, w = 400, 2_000
-    # Check the amount of padding needed to be done.
+    h, w = 256, 512
+
+    # Get the amount of padding needed to be done.
     pad_height = h - image.shape[0]
     pad_width = w - image.shape[1]
 

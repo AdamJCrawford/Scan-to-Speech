@@ -4,26 +4,26 @@ import pickle
 
 from bs4 import BeautifulSoup
 from PIL import Image
+from torch import tensor
+from torch.utils.data import Dataset
 from utility import distortion_free_resize
 
 
-class DataLoader():
-    def __init__(self, batch_size) -> None:
-        self.curr_index = 0
-        self.batch_size = batch_size
+class DatasetExtention(Dataset):
+    def __init__(self) -> None:
+        self.labels = []
         self.data = []
+        self.unique_words_dict = {}
         self.out_label_path = "../dataset/xml/"
         self.outer_img_path = "../dataset/words/"
 
         if not os.path.exists("data"):
             # If there is not a pickle file, have to create it
-
             for file in os.listdir(self.out_label_path):
                 with open(self.out_label_path + file) as f:
                     data = f.read()
 
                 bs_data = BeautifulSoup(data, "xml").find_all("word")
-
                 for tag in bs_data:
                     # File name of image
                     curr_id = tag["id"]
@@ -42,6 +42,12 @@ class DataLoader():
                     try:
                         # Make sure that the image can be opened
                         img = Image.open(whole_directory)
+                        if img.size[0] > 448:
+                            continue
+                        if img.size[1] > 256:
+                            continue
+
+                        self.labels.append(tag["text"])
                         self.data.append([tag["text"], whole_directory])
                     except:
                         try:
@@ -64,16 +70,26 @@ class DataLoader():
 
             self.data = pickle.load(data)
 
+            for label, _ in self.data:
+                self.labels.append(label)
+
             data.close()
 
-    def get_next_batch(self) -> iter(str, np.array):
-        # Use min() to ensure that we don't use an invalid index
-        cur_range = range(self.curr_index, min(
-            self.curr_index + self.batch_size, len(self.data)))
+        self.label_helper()
 
-        curr_labels = [self.data[i][0] for i in cur_range]
-        curr_images = [distortion_free_resize(np.asarray(
-            Image.open(self.data[i][1])) / 255) for i in cur_range]
+    def __len__(self) -> int:
+        return len(self.data)
 
-        self.curr_index += self.batch_size
-        return zip(curr_labels, curr_images)
+    def __getitem__(self, n) -> tuple[np.array, np.array]:
+
+        label = np.zeros([len(self.unique_words_dict), 1])
+        label[self.unique_words_dict[self.data[n][0]]] = 1
+
+        image = distortion_free_resize(
+            np.asarray(Image.open(self.data[n][1]))) / 255
+
+        return label, image
+
+    def label_helper(self) -> None:
+        for i, label in enumerate(set(self.labels)):
+            self.unique_words_dict[label] = i

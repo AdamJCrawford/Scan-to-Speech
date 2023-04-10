@@ -10,5 +10,9 @@
     <string name="title_volume">Volume</string>
     <string name="title_Option2">Option</string>
 
+    <!-- Camera Buttons -->
+    <string name="button_scan">Scan</string>
+    <string name="button_speak">Speak</string>
+
 
 </resources>

@@ -1,6 +1,14 @@
 <resources>
-    <string name="app_name">MyScanToSpeech</string>
+    <string name="app_name">botnavbar2</string>
+
+    <!-- Nav Bar -->
     <string name="title_camera">Camera</string>
     <string name="title_gallery">Gallery</string>
     <string name="title_settings">Settings</string>
+
+    <!-- Settings -->
+    <string name="title_volume">Volume</string>
+    <string name="title_Option2">Option</string>
+
+
 </resources>

@@ -6,8 +6,14 @@ import androidx.lifecycle.ViewModel
 
 class SettingsViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is settings Fragment"
+    private val _volume = MutableLiveData<String>().apply {
+        value = "Volume Slider"
     }
-    val text: LiveData<String> = _text
+    private val _option2 = MutableLiveData<String>().apply {
+        value = "Option 2"
+    }
+
+    val volume: LiveData<String> = _volume
+    val option2: LiveData<String> = _option2
+
 }

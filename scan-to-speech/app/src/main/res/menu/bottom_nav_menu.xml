@@ -4,16 +4,19 @@
     <item
         android:id="@+id/navigation_gallery"
         android:icon="@drawable/ic_gallery_foreground"
-        android:title="@string/title_gallery" />
+        android:title="@string/title_gallery"
+        android:onClick="galleryClicked" />
 
     <item
         android:id="@+id/navigation_camera"
         android:icon="@drawable/ic_camera_foreground"
-        android:title="@string/title_camera" />
+        android:title="@string/title_camera"
+        android:onClick="cameraClicked" />
 
     <item
         android:id="@+id/navigation_settings"
         android:icon="@drawable/ic_settings_foreground"
-        android:title="@string/title_settings" />
+        android:title="@string/title_settings"
+        android:onClick="settingsClicked" />
 
 </menu>

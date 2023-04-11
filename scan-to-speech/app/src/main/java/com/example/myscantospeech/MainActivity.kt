@@ -33,6 +33,8 @@ class MainActivity : AppCompatActivity() {
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
 
+
+
         // Request camera permissions
         if (allPermissionsGranted()) {
             startCamera()
@@ -40,6 +42,7 @@ class MainActivity : AppCompatActivity() {
             ActivityCompat.requestPermissions(
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
             )
+
         }
 
         cameraExecutor = Executors.newSingleThreadExecutor()
@@ -58,6 +61,17 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        // Button listeners
+        val scanBtn = findViewById<android.widget.Button>(R.id.Scan_Button)
+        scanBtn.setOnClickListener {
+            Toast.makeText(this, "Button has been pressed", Toast.LENGTH_SHORT).show()
+        }
+
+        val speakBtn = findViewById<android.widget.Button>(R.id.Speak_Button)
+        speakBtn.setOnClickListener {
+            Toast.makeText(this, "Button has been pressed", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun startCamera() {
@@ -130,5 +144,19 @@ class MainActivity : AppCompatActivity() {
                 finish()
             }
         }
+    }
+
+    // Handles when one of the icons is clicked
+
+    fun galleryClicked(item: android.view.MenuItem) {
+        Toast.makeText(this, "Button has been pressed", Toast.LENGTH_SHORT).show()
+    }
+
+    fun cameraClicked(item: android.view.MenuItem) {
+        Toast.makeText(this, "Button has been pressed", Toast.LENGTH_SHORT).show()
+    }
+
+    fun settingsClicked(item: android.view.MenuItem) {
+        Toast.makeText(this, "Button has been pressed", Toast.LENGTH_SHORT).show()
     }
 }

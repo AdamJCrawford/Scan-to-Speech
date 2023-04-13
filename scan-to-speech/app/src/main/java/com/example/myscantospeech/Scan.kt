@@ -40,7 +40,7 @@ class Scan : AppCompatActivity() {
     }
 
     private fun processTextBlock(result: Text) {
-        // [START mlkit_process_text_block]
+        // [START ml-kit_process_text_block]
         val resultText = result.text
         for (block in result.textBlocks) {
             val blockText = block.text
@@ -57,12 +57,12 @@ class Scan : AppCompatActivity() {
                 }
             }
         }
-        // [END mlkit_process_text_block]
+        // [END ml-kit_process_text_block]
     }
 
     private fun getTextRecognizer(): TextRecognizer {
-        // [START mlkit_local_doc_recognizer]
+        // [START ml-kit_local_doc_recognizer]
         return TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
-        // [END mlkit_local_doc_recognizer]
+        // [END ml-kit_local_doc_recognizer]
     }
 }

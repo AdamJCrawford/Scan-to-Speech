@@ -3,16 +3,16 @@ package com.example.myscantospeech
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Bundle
+import android.speech.tts.TextToSpeech
+import android.util.Log
+import android.view.Menu
+import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.mlkit.vision.MlKitAnalyzer
 import androidx.camera.view.CameraController.COORDINATE_SYSTEM_VIEW_REFERENCED
-import android.os.Bundle
-import android.speech.tts.TextToSpeech
-import android.util.Log
-import android.view.View
-import android.widget.Button
-import android.widget.EditText
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
@@ -21,14 +21,12 @@ import com.example.myscantospeech.databinding.ActivityMainBinding
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.TextRecognizer
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
-import java.util.*
+import android.view.MenuItem;
+
+
 
 class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private lateinit var viewBinding: ActivityMainBinding
@@ -37,8 +35,6 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private var btnSpeak: Button? = null
     private var tts: TextToSpeech? = null
-
-    private var settingsButton: Button? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,14 +61,6 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         cameraExecutor = Executors.newSingleThreadExecutor()
 
-        //Settings Page Button
-        settingsButton = findViewById(R.id.settingsbutton) as Button?
-        settingsButton!!.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                openSettingsActivity()
-            }
-        })
-
         // Button listeners
         val scanBtn = findViewById<android.widget.Button>(R.id.Scan_Button)
         scanBtn.setOnClickListener {
@@ -85,6 +73,21 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menubar, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.getItemId()) {
+            R.id.settingsitem -> {
+                openSettingsActivity()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 
     fun openSettingsActivity() {
         val intent = Intent(this, SettingsActivity::class.java)

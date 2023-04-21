@@ -73,24 +73,37 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    //button menu
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.menubar, menu)
         return true
     }
 
+    //button menu buttons
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.getItemId()) {
             R.id.settingsitem -> {
                 openSettingsActivity()
                 true
             }
+            R.id.galleryitem -> {
+                openGallery()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
+    //open settings page
     fun openSettingsActivity() {
         val intent = Intent(this, SettingsActivity::class.java)
+        startActivity(intent)
+    }
+
+    //open photo gallery
+    fun openGallery() {
+        val intent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivity(intent)
     }
 

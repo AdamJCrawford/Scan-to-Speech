@@ -1,16 +1,18 @@
 package com.example.myscantospeech
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Bundle
+import android.speech.tts.TextToSpeech
+import android.util.Log
+import android.view.Menu
+import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.mlkit.vision.MlKitAnalyzer
 import androidx.camera.view.CameraController.COORDINATE_SYSTEM_VIEW_REFERENCED
-import android.os.Bundle
-import android.speech.tts.TextToSpeech
-import android.util.Log
-import android.widget.Button
-import android.widget.EditText
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
@@ -19,14 +21,12 @@ import com.example.myscantospeech.databinding.ActivityMainBinding
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.TextRecognizer
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
-import java.util.*
+import android.view.MenuItem;
+
+
 
 class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private lateinit var viewBinding: ActivityMainBinding
@@ -61,21 +61,6 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         cameraExecutor = Executors.newSingleThreadExecutor()
 
-        //Bottom Navigation Bar
-
-        val navView: BottomNavigationView = viewBinding.navView
-
-        val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_gallery, R.id.navigation_camera, R.id.navigation_settings
-            )
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
-
         // Button listeners
         val scanBtn = findViewById<android.widget.Button>(R.id.Scan_Button)
         scanBtn.setOnClickListener {
@@ -86,6 +71,40 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         speakBtn.setOnClickListener {
             Toast.makeText(this, "Button has been pressed", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    //button menu
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menubar, menu)
+        return true
+    }
+
+    //button menu buttons
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.getItemId()) {
+            R.id.settingsitem -> {
+                openSettingsActivity()
+                true
+            }
+            R.id.galleryitem -> {
+                openGallery()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    //open settings page
+    fun openSettingsActivity() {
+        val intent = Intent(this, SettingsActivity::class.java)
+        startActivity(intent)
+    }
+
+    //open photo gallery
+    fun openGallery() {
+        val intent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivity(intent)
     }
 
     override fun onInit(status: Int) {

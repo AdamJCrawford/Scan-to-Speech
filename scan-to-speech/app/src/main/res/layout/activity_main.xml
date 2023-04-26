@@ -12,9 +12,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Voice Test"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/open"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+  <Button
+      android:id="@+id/open"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="snap"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.743"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/Scan_Button"

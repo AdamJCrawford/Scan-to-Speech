@@ -31,10 +31,10 @@ import android.hardware.camera2.CameraDevice
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.widget.ImageView
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import java.text.SimpleDateFormat
-
 
 class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private lateinit var viewBinding: ActivityMainBinding
@@ -117,8 +117,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     //open photo gallery
     fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        startActivity(intent)
-//        startActivityForResult(intent, 10)
+//        startActivity(intent)
+        startActivityForResult(intent, 10)
     }
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
@@ -149,13 +149,11 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                     it.setSurfaceProvider(viewBinding.viewFinder.surfaceProvider)
                 }
             imageCapture = ImageCapture.Builder().setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY).build()
-//            ImageCapture.Builder().build()
             // Select back camera as a default
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
             try {
                 cameraProvider.unbindAll()
-
                 // Bind use cases to camera
                 cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture)
             } catch(exc: Exception) {
@@ -177,8 +175,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         // Create output options object which contains file + metadata
         val outputOptions = ImageCapture.OutputFileOptions.Builder(contentResolver, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues).build()
 
-        // Set up image capture listener, which is triggered after photo has
-        // been taken
+        // Set up image capture listener, which is triggered after photo has been taken
         imageCapture.takePicture(
             outputOptions,
             ContextCompat.getMainExecutor(this),
@@ -267,18 +264,18 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 // Display image selected from gallery
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        if(requestCode == 10){
-//            if(data != null){
-//                uri = data.data!!
-//                bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
-//                findViewById<ImageView>(R.id.img).setImageBitmap(bitmap)
-//
-//            }
-//
-//        }
-//        super.onActivityResult(requestCode, resultCode, data)
-//    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(requestCode == 10){
+            if(data != null){
+                uri = data.data!!
+                bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
+                findViewById<ImageView>(R.id.img).setImageBitmap(bitmap)
+                //TODO: scan selected image for text
+            }
+
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
 //    bitmap = data?.extras!!["data"] as Bitmap
 
     // Handles when one of the icons is clicked

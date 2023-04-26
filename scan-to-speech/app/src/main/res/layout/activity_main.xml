@@ -7,6 +7,31 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+  <RelativeLayout
+      android:id="@+id/lay"
+      android:layout_width="376dp"
+      android:layout_height="591dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="@+id/container"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="@+id/button2">
+
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="match_parent"
+        android:layout_height="315dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="0dp" />
+
+    <androidx.camera.view.PreviewView
+        android:id="@+id/viewFinder"
+        android:layout_width="match_parent"
+        android:layout_height="277dp"
+        android:layout_above="@+id/img"
+        android:layout_marginBottom="-1dp">
+
+    </androidx.camera.view.PreviewView>
+  </RelativeLayout>
     <Button
         android:id="@+id/button2"
         android:layout_width="wrap_content"
@@ -48,15 +73,5 @@
         app:layout_constraintHorizontal_bias="0.899"
         app:layout_constraintStart_toEndOf="@+id/Scan_Button" />
 
-
-    <androidx.camera.view.PreviewView
-        android:id="@+id/viewFinder"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="0dp">
-
-    </androidx.camera.view.PreviewView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

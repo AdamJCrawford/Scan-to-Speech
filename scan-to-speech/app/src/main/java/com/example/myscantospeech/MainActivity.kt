@@ -31,6 +31,7 @@ import android.hardware.camera2.CameraDevice
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.widget.ImageView
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import com.google.mlkit.vision.common.InputImage
@@ -123,8 +124,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     //open photo gallery
     fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        startActivity(intent)
-//        startActivityForResult(intent, 10)
+        //startActivity(intent, )
+        startActivityForResult(intent, 10)
     }
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
@@ -180,8 +181,9 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 override fun onCaptureSuccess(output: ImageProxy){
                     val mediaImage = output.image
                     if (mediaImage != null) {
-                        val image =
-                            InputImage.fromMediaImage(mediaImage, output.imageInfo.rotationDegrees)
+                        val image = InputImage.fromMediaImage(mediaImage, output.imageInfo.rotationDegrees)
+                        findViewById<ImageView>(R.id.img).setImageBitmap(image.bitmapInternal)
+                        //findViewById<ImageView>(R.id.img).rotation = output.imageInfo.rotationDegrees as Float
                         scan(image)
                     }
                 }
@@ -260,18 +262,20 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 // Display image selected from gallery
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        if(requestCode == 10){
-//            if(data != null){
-//                uri = data.data!!
-//                bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
-//                findViewById<ImageView>(R.id.img).setImageBitmap(bitmap)
-//
-//            }
-//
-//        }
-//        super.onActivityResult(requestCode, resultCode, data)
-//    }
+override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    if(requestCode == 10){
+        if(data != null){
+            uri = data.data!!
+            bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
+            findViewById<ImageView>(R.id.img).setImageBitmap(bitmap)
+            findViewById<ImageView>(R.id.img).rotation = 90.0F
+            scan(InputImage.fromBitmap(bitmap, 0))
+
+        }
+
+    }
+    super.onActivityResult(requestCode, resultCode, data)
+}
 //    bitmap = data?.extras!!["data"] as Bitmap
 
     fun scan(image: InputImage){

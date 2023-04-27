@@ -56,7 +56,6 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
 
-
         btnSpeak = findViewById(R.id.button2)
         btnCapture = findViewById(R.id.open)
         btnSpeak!!.isEnabled = false
@@ -139,10 +138,10 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
-    private fun speakOut() {
-        val text = "Hello, this works."//etSpeak!!.text.toString()
+    private fun speakOut(text: String = "Hello, this works") {
         tts!!.speak(text, TextToSpeech.QUEUE_FLUSH, null,"")
     }
+
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
@@ -172,32 +171,19 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }, ContextCompat.getMainExecutor(this))
     }
     private fun takePhoto() {
-        // Create time stamped name and MediaStore entry.
-        val name = SimpleDateFormat("MM-dd-yyyy", Locale.US).format(System.currentTimeMillis())
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image")
-            }
-        }
-        // Create output options object which contains file + metadata
-        val outputOptions = ImageCapture.OutputFileOptions.Builder(contentResolver, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues).build()
-
-        // Set up image capture listener, which is triggered after photo has
-        // been taken
         imageCapture.takePicture(
-            outputOptions,
             ContextCompat.getMainExecutor(this),
-            object : ImageCapture.OnImageSavedCallback {
+            @ExperimentalGetImage object : ImageCapture.OnImageCapturedCallback() {
                 override fun onError(exc: ImageCaptureException) {
                     Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
                 }
-
-                override fun onImageSaved(output: ImageCapture.OutputFileResults){
-                    val msg = "Photo capture succeeded: ${output.savedUri}"
-                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-                    Log.d(TAG, msg)
+                override fun onCaptureSuccess(output: ImageProxy){
+                    val mediaImage = output.image
+                    if (mediaImage != null) {
+                        val image =
+                            InputImage.fromMediaImage(mediaImage, output.imageInfo.rotationDegrees)
+                        scan(image)
+                    }
                 }
             }
         )
@@ -314,12 +300,14 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 //                scanBtn!!.isEnabled = true
 
                 text = visionText.text
-                Log.e("Text Recogniton Success: ", text)
+                Log.i("Text Recogniton Success: ", text)
+                Toast.makeText(this, text, Toast.LENGTH_LONG).show() // placeholder
             }
             .addOnFailureListener { er ->
                 // Task failed with an exception
                 // ...
                 Log.e( er.message, "Failed Text Recognition")
+                Toast.makeText(this, "FAILED RECOGNITION", Toast.LENGTH_LONG).show() // placeholder
             }
     }
 

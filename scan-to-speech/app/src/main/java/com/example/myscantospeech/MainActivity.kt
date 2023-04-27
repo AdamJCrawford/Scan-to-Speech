@@ -31,10 +31,11 @@ import android.hardware.camera2.CameraDevice
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import android.widget.ImageView
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
+import com.google.mlkit.vision.common.InputImage
 import java.text.SimpleDateFormat
+
 
 class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private lateinit var viewBinding: ActivityMainBinding
@@ -43,8 +44,10 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private lateinit var bitmap: Bitmap
     private lateinit var imageCapture: ImageCapture
     private lateinit var uri: Uri
+    private lateinit var text:String
 
     private var btnSpeak: Button? = null
+    private var scanBtn: Button? = null
     private var btnCapture: Button? = null
     private var tts: TextToSpeech? = null
 
@@ -52,7 +55,6 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         super.onCreate(savedInstanceState)
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
-
 
         btnSpeak = findViewById(R.id.button2)
         btnCapture = findViewById(R.id.open)
@@ -75,9 +77,13 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         cameraExecutor = Executors.newSingleThreadExecutor()
 
         // Button listeners
-        val scanBtn = findViewById<android.widget.Button>(R.id.Scan_Button)
-        scanBtn.setOnClickListener {
+        scanBtn = findViewById<android.widget.Button>(R.id.Scan_Button)
+
+//        scanBtn!!.isEnabled=false
+        scanBtn!!.setOnClickListener {
             Toast.makeText(this, "Button has been pressed", Toast.LENGTH_SHORT).show()
+
+//            scan(image)
         }
 
         val speakBtn = findViewById<android.widget.Button>(R.id.Speak_Button)
@@ -117,8 +123,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     //open photo gallery
     fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-//        startActivity(intent)
-        startActivityForResult(intent, 10)
+        startActivity(intent)
+//        startActivityForResult(intent, 10)
     }
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
@@ -132,10 +138,10 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
-    private fun speakOut() {
-        val text = "Hello, this works."//etSpeak!!.text.toString()
+    private fun speakOut(text: String = "Hello, this works") {
         tts!!.speak(text, TextToSpeech.QUEUE_FLUSH, null,"")
     }
+
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
@@ -149,11 +155,13 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                     it.setSurfaceProvider(viewBinding.viewFinder.surfaceProvider)
                 }
             imageCapture = ImageCapture.Builder().setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY).build()
+//            ImageCapture.Builder().build()
             // Select back camera as a default
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
             try {
                 cameraProvider.unbindAll()
+
                 // Bind use cases to camera
                 cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture)
             } catch(exc: Exception) {
@@ -163,31 +171,19 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }, ContextCompat.getMainExecutor(this))
     }
     private fun takePhoto() {
-        // Create time stamped name and MediaStore entry.
-        val name = SimpleDateFormat("MM-dd-yyyy", Locale.US).format(System.currentTimeMillis())
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image")
-            }
-        }
-        // Create output options object which contains file + metadata
-        val outputOptions = ImageCapture.OutputFileOptions.Builder(contentResolver, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues).build()
-
-        // Set up image capture listener, which is triggered after photo has been taken
         imageCapture.takePicture(
-            outputOptions,
             ContextCompat.getMainExecutor(this),
-            object : ImageCapture.OnImageSavedCallback {
+            @ExperimentalGetImage object : ImageCapture.OnImageCapturedCallback() {
                 override fun onError(exc: ImageCaptureException) {
                     Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
                 }
-
-                override fun onImageSaved(output: ImageCapture.OutputFileResults){
-                    val msg = "Photo capture succeeded: ${output.savedUri}"
-                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-                    Log.d(TAG, msg)
+                override fun onCaptureSuccess(output: ImageProxy){
+                    val mediaImage = output.image
+                    if (mediaImage != null) {
+                        val image =
+                            InputImage.fromMediaImage(mediaImage, output.imageInfo.rotationDegrees)
+                        scan(image)
+                    }
                 }
             }
         )
@@ -264,31 +260,45 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 // Display image selected from gallery
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(requestCode == 10){
-            if(data != null){
-                uri = data.data!!
-                bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
-                findViewById<ImageView>(R.id.img).setImageBitmap(bitmap)
-                //TODO: scan selected image for text
-            }
-
-        }
-        super.onActivityResult(requestCode, resultCode, data)
-    }
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        if(requestCode == 10){
+//            if(data != null){
+//                uri = data.data!!
+//                bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
+//                findViewById<ImageView>(R.id.img).setImageBitmap(bitmap)
+//
+//            }
+//
+//        }
+//        super.onActivityResult(requestCode, resultCode, data)
+//    }
 //    bitmap = data?.extras!!["data"] as Bitmap
 
-    // Handles when one of the icons is clicked
+    fun scan(image: InputImage){
+        val recognizer = getTextRecognizer()
+        // [END get_detector_default]
 
-    fun galleryClicked(item: android.view.MenuItem) {
-        Toast.makeText(this, "Button has been pressed", Toast.LENGTH_SHORT).show()
+        // [START run_detector]
+        recognizer.process(image)
+            .addOnSuccessListener { visionText ->
+//                scanBtn!!.isEnabled = true
+
+                text = visionText.text
+                Log.i("Text Recogniton Success: ", text)
+                tts!!.speak(text, TextToSpeech.QUEUE_FLUSH, null,"")
+            }
+            .addOnFailureListener { er ->
+                // Task failed with an exception
+                // ...
+                Log.e( er.message, "Failed Text Recognition")
+                Toast.makeText(this, "FAILED RECOGNITION", Toast.LENGTH_LONG).show() // placeholder
+            }
     }
 
-    fun cameraClicked(item: android.view.MenuItem) {
-        Toast.makeText(this, "Button has been pressed", Toast.LENGTH_SHORT).show()
-    }
 
-    fun settingsClicked(item: android.view.MenuItem) {
-        Toast.makeText(this, "Button has been pressed", Toast.LENGTH_SHORT).show()
+    private fun getTextRecognizer(): TextRecognizer {
+        // [START ml-kit_local_doc_recognizer]
+        return TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+        // [END ml-kit_local_doc_recognizer]
     }
 }

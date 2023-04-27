@@ -1,5 +1,6 @@
 package com.example.myscantospeech
 
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
@@ -9,33 +10,20 @@ import com.google.mlkit.vision.text.Text
 
 class Scan : AppCompatActivity() {
     fun scan(image: InputImage){
-        val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+        val recognizer = getTextRecognizer()
         // [END get_detector_default]
 
         // [START run_detector]
         val result = recognizer.process(image)
             .addOnSuccessListener { visionText ->
-                // Task completed successfully
-                // [START_EXCLUDE]
-                // [START get_text]
-                for (block in visionText.textBlocks) {
-                    val boundingBox = block.boundingBox
-                    val cornerPoints = block.cornerPoints
-                    val text = block.text
-
-                    for (line in block.lines) {
-                        // ...
-                        for (element in line.elements) {
-                            // ...
-                        }
-                    }
-                }
-                // [END get_text]
-                // [END_EXCLUDE]
+                // Want to save text and set speakBtn to enable
+                val text = visionText.text
+                Log.e("Text Recognition Success: ", text)
             }
-            .addOnFailureListener { e ->
+            .addOnFailureListener { er ->
                 // Task failed with an exception
                 // ...
+                Log.e( er.message, "Failed Text Recognition")
             }
     }
 

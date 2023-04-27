@@ -33,6 +33,7 @@ import android.os.Build
 import android.provider.MediaStore
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
+import com.google.mlkit.vision.common.InputImage
 import java.text.SimpleDateFormat
 
 
@@ -43,8 +44,10 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private lateinit var bitmap: Bitmap
     private lateinit var imageCapture: ImageCapture
     private lateinit var uri: Uri
+    private lateinit var text:String
 
     private var btnSpeak: Button? = null
+    private var scanBtn: Button? = null
     private var btnCapture: Button? = null
     private var tts: TextToSpeech? = null
 
@@ -75,9 +78,13 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         cameraExecutor = Executors.newSingleThreadExecutor()
 
         // Button listeners
-        val scanBtn = findViewById<android.widget.Button>(R.id.Scan_Button)
-        scanBtn.setOnClickListener {
+        scanBtn = findViewById<android.widget.Button>(R.id.Scan_Button)
+
+//        scanBtn!!.isEnabled=false
+        scanBtn!!.setOnClickListener {
             Toast.makeText(this, "Button has been pressed", Toast.LENGTH_SHORT).show()
+
+//            scan(image)
         }
 
         val speakBtn = findViewById<android.widget.Button>(R.id.Speak_Button)
@@ -293,5 +300,33 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     fun settingsClicked(item: android.view.MenuItem) {
         Toast.makeText(this, "Button has been pressed", Toast.LENGTH_SHORT).show()
+    }
+
+
+
+    fun scan(image: InputImage){
+        val recognizer = getTextRecognizer()
+        // [END get_detector_default]
+
+        // [START run_detector]
+        recognizer.process(image)
+            .addOnSuccessListener { visionText ->
+//                scanBtn!!.isEnabled = true
+
+                text = visionText.text
+                Log.e("Text Recogniton Success: ", text)
+            }
+            .addOnFailureListener { er ->
+                // Task failed with an exception
+                // ...
+                Log.e( er.message, "Failed Text Recognition")
+            }
+    }
+
+
+    private fun getTextRecognizer(): TextRecognizer {
+        // [START ml-kit_local_doc_recognizer]
+        return TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+        // [END ml-kit_local_doc_recognizer]
     }
 }

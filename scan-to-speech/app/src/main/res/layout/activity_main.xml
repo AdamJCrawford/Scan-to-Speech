@@ -9,12 +9,12 @@
 
   <RelativeLayout
       android:id="@+id/lay"
-      android:layout_width="376dp"
-      android:layout_height="591dp"
+      android:layout_width="378dp"
+      android:layout_height="619dp"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="@+id/container"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="@+id/button2">
+      app:layout_constraintTop_toTopOf="parent">
 
     <ImageView
         android:id="@+id/img"
@@ -26,29 +26,14 @@
     <androidx.camera.view.PreviewView
         android:id="@+id/viewFinder"
         android:layout_width="match_parent"
-        android:layout_height="277dp"
+        android:layout_height="306dp"
         android:layout_above="@+id/img"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp"
         android:layout_marginBottom="-1dp">
 
     </androidx.camera.view.PreviewView>
   </RelativeLayout>
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Voice Test"
-        app:layout_constraintEnd_toStartOf="@+id/open"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-  <Button
-      android:id="@+id/open"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="snap"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.743"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/Scan_Button"
@@ -58,16 +43,16 @@
         android:layout_marginEnd="108dp"
         android:text="Scan"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/Speak_Button"
+        app:layout_constraintEnd_toStartOf="@+id/open"
         app:layout_constraintStart_toStartOf="parent" />
 
 
     <Button
-        android:id="@+id/Speak_Button"
+        android:id="@+id/open"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="48dp"
-        android:text="Speak"
+        android:text="snap"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.899"

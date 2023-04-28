@@ -47,7 +47,6 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private lateinit var uri: Uri
     private lateinit var text:String
 
-    private var btnSpeak: Button? = null
     private var scanBtn: Button? = null
     private var btnCapture: Button? = null
     private var tts: TextToSpeech? = null
@@ -57,12 +56,11 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
 
-        btnSpeak = findViewById(R.id.button2)
+        scanBtn = findViewById(R.id.Scan_Button)
         btnCapture = findViewById(R.id.open)
-        btnSpeak!!.isEnabled = false
+
         tts = TextToSpeech(this, this)
 
-        btnSpeak!!.setOnClickListener { speakOut() }
         btnCapture!!.setOnClickListener { takePhoto() }
 
         // Request camera permissions
@@ -82,15 +80,10 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
 //        scanBtn!!.isEnabled=false
         scanBtn!!.setOnClickListener {
-            Toast.makeText(this, "Button has been pressed", Toast.LENGTH_SHORT).show()
-
+            scan(InputImage.fromBitmap(bitmap, 0))
 //            scan(image)
         }
 
-        val speakBtn = findViewById<android.widget.Button>(R.id.Speak_Button)
-        speakBtn.setOnClickListener {
-            Toast.makeText(this, "Button has been pressed", Toast.LENGTH_SHORT).show()
-        }
     }
 
     //button menu
@@ -134,14 +127,10 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                 Log.e("TTS","The Language not supported!")
             } else {
-                btnSpeak!!.isEnabled = true
             }
         }
     }
 
-    private fun speakOut(text: String = "Hello, this works") {
-        tts!!.speak(text, TextToSpeech.QUEUE_FLUSH, null,"")
-    }
 
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
@@ -268,7 +257,7 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
             uri = data.data!!
             bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
             findViewById<ImageView>(R.id.img).setImageBitmap(bitmap)
-            findViewById<ImageView>(R.id.img).rotation = 90.0F
+            findViewById<ImageView>(R.id.img).rotation = 0.0F
             scan(InputImage.fromBitmap(bitmap, 0))
 
         }

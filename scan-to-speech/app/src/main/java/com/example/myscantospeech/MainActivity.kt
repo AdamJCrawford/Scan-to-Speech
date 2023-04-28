@@ -1,41 +1,32 @@
 package com.example.myscantospeech
 
 import android.Manifest
-import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.Menu
-import android.view.View
+import android.view.MenuItem
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.camera.mlkit.vision.MlKitAnalyzer
-import androidx.camera.view.CameraController.COORDINATE_SYSTEM_VIEW_REFERENCED
-import androidx.camera.view.LifecycleCameraController
-import androidx.camera.view.PreviewView
+import androidx.camera.core.*
+import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.myscantospeech.databinding.ActivityMainBinding
+import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.TextRecognizer
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import android.view.MenuItem;
-import android.graphics.Bitmap
-import android.hardware.camera2.CameraDevice
-import android.net.Uri
-import android.os.Build
-import android.provider.MediaStore
-import android.widget.ImageView
-import androidx.camera.core.*
-import androidx.camera.lifecycle.ProcessCameraProvider
-import com.google.mlkit.vision.common.InputImage
-import java.text.SimpleDateFormat
 
 
 class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
@@ -50,6 +41,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var scanBtn: Button? = null
     private var btnCapture: Button? = null
     private var tts: TextToSpeech? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,7 +72,11 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
 //        scanBtn!!.isEnabled=false
         scanBtn!!.setOnClickListener {
-            scan(InputImage.fromBitmap(bitmap, 0))
+                if(!(::bitmap.isInitialized)){
+                    Toast.makeText(this, "Select image first.", Toast.LENGTH_SHORT).show()
+                } else {
+                    scan(InputImage.fromBitmap(bitmap, 0))
+                }
 //            scan(image)
         }
 

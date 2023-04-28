@@ -1,10 +1,12 @@
 package com.example.myscantospeech
 
 import android.Manifest
+import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.speech.tts.TextToSpeech
@@ -24,6 +26,7 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.TextRecognizer
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -157,20 +160,28 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }, ContextCompat.getMainExecutor(this))
     }
     private fun takePhoto() {
+        val name = SimpleDateFormat("MM-dd-yyyy", Locale.US).format(System.currentTimeMillis())
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/scantospeech")
+            }
+        }
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(contentResolver, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues).build()
         imageCapture.takePicture(
+            outputOptions,
             ContextCompat.getMainExecutor(this),
-            @ExperimentalGetImage object : ImageCapture.OnImageCapturedCallback() {
+            object : ImageCapture.OnImageSavedCallback {
                 override fun onError(exc: ImageCaptureException) {
                     Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
                 }
-                override fun onCaptureSuccess(output: ImageProxy){
-                    val mediaImage = output.image
-                    if (mediaImage != null) {
-                        val image = InputImage.fromMediaImage(mediaImage, output.imageInfo.rotationDegrees)
-                        findViewById<ImageView>(R.id.img).setImageBitmap(image.bitmapInternal)
-                        //findViewById<ImageView>(R.id.img).rotation = output.imageInfo.rotationDegrees as Float
-                        scan(image)
-                    }
+                override fun onImageSaved(output: ImageCapture.OutputFileResults){
+                    val msg = "Photo capture succeeded: ${output.savedUri}"
+                    uri = output.getSavedUri()!!
+                    bitmap =  MediaStore.Images.Media.getBitmap(contentResolver, uri)
+                    findViewById<ImageView>(R.id.img).setImageBitmap(bitmap)
+                    scan(InputImage.fromBitmap(bitmap, 0))
                 }
             }
         )
@@ -270,9 +281,8 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
         // [START run_detector]
         recognizer.process(image)
             .addOnSuccessListener { visionText ->
-//                scanBtn!!.isEnabled = true
-
                 text = visionText.text
+                Toast.makeText(this, text, Toast.LENGTH_LONG).show()
                 Log.i("Text Recogniton Success: ", text)
                 tts!!.speak(text, TextToSpeech.QUEUE_FLUSH, null,"")
             }

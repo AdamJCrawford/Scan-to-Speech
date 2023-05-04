@@ -24,7 +24,7 @@
 
     <PreferenceCategory
         app:title="@string/other_header"
-        app:icon="@drawable/ic_other_settings">>
+        app:icon="@drawable/ic_other_settings">
 
         <SwitchPreferenceCompat
             app:key="dark_mode"

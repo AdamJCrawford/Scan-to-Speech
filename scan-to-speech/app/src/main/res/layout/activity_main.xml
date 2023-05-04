@@ -5,6 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#B4A2DD"
     tools:context=".MainActivity">
 
   <RelativeLayout
@@ -15,6 +16,18 @@
       app:layout_constraintEnd_toEndOf="@+id/container"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:layout_alignParentBottom="true"
+        android:text="@string/no_image_text"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/white"
+        android:textSize="50sp"
+        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/img"
@@ -37,27 +50,34 @@
 
   <Button
       android:id="@+id/Scan_Button"
-      style="@style/Widget.AppCompat.Button"
+      android:drawableStart="@drawable/ic_speak_btn_24"
+      android:drawablePadding="-3dp"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginStart="48dp"
       android:layout_marginEnd="108dp"
-      android:text="Speak"
+      android:background="@drawable/custom_button"
+      android:text="@string/button_speak"
+      android:textColor="@color/white"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toStartOf="@+id/open"
       app:layout_constraintStart_toStartOf="parent" />
 
 
-    <Button
-        android:id="@+id/open"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="48dp"
-        android:text="Snap"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.899"
-        app:layout_constraintStart_toEndOf="@+id/Scan_Button" />
+  <Button
+      android:id="@+id/open"
+      android:drawableStart="@drawable/ic_snap_btn_24"
+      android:drawablePadding="-3dp"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="48dp"
+      android:background="@drawable/custom_button"
+      android:text="@string/button_snap"
+      android:textColor="@color/white"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.899"
+      app:layout_constraintStart_toEndOf="@+id/Scan_Button" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

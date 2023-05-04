@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">myscantospeech</string>
+    <string name="app_name">Scan-to-Speech</string>
 
     <!-- Nav Bar -->
     <string name="title_camera">Camera</string>
@@ -11,24 +11,24 @@
     <string name="title_Option2">Option</string>
 
     <!-- Camera Buttons -->
-    <string name="button_scan">Scan</string>
+    <string name="button_snap">Snap</string>
     <string name="button_speak">Speak</string>
+    <string name="no_image_text">No Image Selected</string>
 
     <!-- Settings Page -->
-    <string name="title_activity_settings">Volume</string>
+    <string name="title_activity_settings">Settings</string>
 
     <!-- Preference Titles -->
     <string name="playback_header">Playback</string>
     <string name="other_header">Other Settings</string>
 
-    <!-- Messages Preferences -->
+    <!-- Playback Preferences -->
     <string name="signature_title">Your signature</string>
     <string name="voice_list_title">Playback Voice</string>
 
-    <!-- Sync Preferences -->
+    <!-- Other Preferences -->
     <string name="dark_mode_title">Dark Mode</string>
     <string name="dark_mode_summary_on">Dark Mode On</string>
     <string name="dark_mode_summary_off">Dark Mode Off</string>
 
-    <string name="attachment_title">Download incoming attachments</string>
 </resources>

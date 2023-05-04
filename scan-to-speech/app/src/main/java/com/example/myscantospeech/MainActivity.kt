@@ -230,7 +230,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     override fun onDestroy() {
         super.onDestroy()
         cameraExecutor.shutdown()
-        textRecognizer.close()
+        //textRecognizer.close() //this line crashes app when returning to main activity from settings
     }
 
     companion object {

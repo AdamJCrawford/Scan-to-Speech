@@ -1,65 +1,37 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory app:title="@string/messages_header">
+    <PreferenceCategory
+        app:title="@string/playback_header"
+        app:icon="@drawable/ic_playback">
 
-        <EditTextPreference
-            app:key="signature"
-            app:title="@string/signature_title"
-            app:useSimpleSummaryProvider="true" />
+        <SeekBarPreference
+            android:key="volume_slider"
+            app:title="@string/title_volume"
+            app:showSeekBarValue="true"
+            app:defaultValue="50"/>
 
         <ListPreference
-            app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="reply"
-            app:title="@string/reply_title"
+            app:defaultValue="siri"
+            app:entries="@array/voice_list_entries"
+            app:entryValues="@array/voice_list_values"
+            app:key="voice_list"
+            app:title="@string/voice_list_title"
             app:useSimpleSummaryProvider="true" />
+
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/sync_header">
+    <PreferenceCategory
+        app:title="@string/other_header"
+        app:icon="@drawable/ic_other_settings">>
 
         <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
+            app:key="dark_mode"
+            app:title="@string/dark_mode_title"
+            app:summaryOff="@string/dark_mode_summary_off"
+            app:summaryOn="@string/dark_mode_summary_on" />
 
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
-
-    </PreferenceCategory><PreferenceCategory
-    app:title="@string/messages_header">
-
-    <EditTextPreference
-        app:key="signature"
-        app:title="@string/signature_title"
-        app:useSimpleSummaryProvider="true"/>
-
-    <ListPreference
-        app:key="reply"
-        app:title="@string/reply_title"
-        app:entries="@array/reply_entries"
-        app:entryValues="@array/reply_values"
-        app:defaultValue="reply"
-        app:useSimpleSummaryProvider="true"/>
-
-</PreferenceCategory><PreferenceCategory
-    app:title="@string/sync_header">
-
-    <SwitchPreferenceCompat
-        app:key="sync"
-        app:title="@string/sync_title"/>
-
-    <SwitchPreferenceCompat
-        app:key="attachment"
-        app:title="@string/attachment_title"
-        app:summaryOn="@string/attachment_summary_on"
-        app:summaryOff="@string/attachment_summary_off"
-        app:dependency="sync"/>
-
-</PreferenceCategory>
+    </PreferenceCategory>
 
 </PreferenceScreen>

@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Reply Preference -->
-    <string-array name="reply_entries">
-        <item>Reply</item>
-        <item>Reply to all</item>
+    <string-array name="voice_list_entries">
+        <item>Siri</item>
+        <item>Alexa</item>
+        <item>Mark</item>
+        <item>John</item>
     </string-array>
 
-    <string-array name="reply_values">
-        <item>reply</item>
-        <item>reply_all</item>
+    <string-array name="voice_list_values">
+        <item>siri</item>
+        <item>alexa</item>
+        <item>mark</item>
+        <item>john</item>
     </string-array>
 </resources>

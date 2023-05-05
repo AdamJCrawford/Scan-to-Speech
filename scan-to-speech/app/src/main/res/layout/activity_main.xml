@@ -18,9 +18,13 @@
       app:layout_constraintTop_toTopOf="parent">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="230dp"
+        android:layout_width="269dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
+        android:layout_marginEnd="55dp"
+        android:layout_marginBottom="124dp"
+        android:background="@drawable/yellow_outline"
         android:text="@string/no_image_text"
         android:textAlignment="center"
         android:textAllCaps="true"

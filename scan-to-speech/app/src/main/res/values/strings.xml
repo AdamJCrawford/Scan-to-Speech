@@ -30,5 +30,6 @@
     <string name="dark_mode_title">Dark Mode</string>
     <string name="dark_mode_summary_on">Dark Mode On</string>
     <string name="dark_mode_summary_off">Dark Mode Off</string>
+    <string name="text_size_title">Text Size</string>
 
 </resources>

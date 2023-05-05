@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Reply Preference -->
+    <!-- Voices Preference -->
     <string-array name="voice_list_entries">
         <item>Siri</item>
         <item>Alexa</item>
@@ -13,5 +13,24 @@
         <item>alexa</item>
         <item>mark</item>
         <item>john</item>
+    </string-array>
+
+    <!-- Text Sizes Preference -->
+    <string-array name="text_size_entries">
+        <item>10sp</item>
+        <item>12sp</item>
+        <item>14sp</item>
+        <item>16sp</item>
+        <item>18sp</item>
+        <item>20sp</item>
+    </string-array>
+
+    <string-array name="text_size_values">
+        <item>text_size_10</item>
+        <item>text_size_12</item>
+        <item>text_size_14</item>
+        <item>text_size_16</item>
+        <item>text_size_18</item>
+        <item>text_size_20</item>
     </string-array>
 </resources>
